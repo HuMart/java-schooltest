@@ -49,4 +49,10 @@ public class CourseServiceImpl implements CourseService
     {
         return courserepos.findById(id).orElseThrow(EntityNotFoundException::new);
     }
+
+    @Override
+    public Course Add(Course course)
+    {
+        return courserepos.save(course);
+    }
 }

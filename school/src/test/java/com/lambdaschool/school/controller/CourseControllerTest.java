@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = CourseController.class, secure = false)
 public class CourseControllerTest
@@ -59,6 +61,25 @@ public class CourseControllerTest
     @After
     public void tearDown() throws Exception
     {
+    }
+
+    @Test
+    public void addCourse() throws Exception
+    {
+        String apiUrl = "/courses/course/add";
+        Course newCourse = new Course();
+        newCourse.setCourseid(10);
+        newCourse.setCoursename("Spanish");
+        newCourse.setInstructor(new Instructor("John Doe"));
+
+        Mockito.when(courseService.Add(newCourse)).thenReturn(((Course)newCourse));
+
+        ObjectMapper inputMapper = new ObjectMapper();
+        String inputString = inputMapper.writeValueAsString(newCourse);
+
+        mockMvc.perform(MockMvcRequestBuilders.post(apiUrl).content(inputString)
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
+
     }
 
     @Test

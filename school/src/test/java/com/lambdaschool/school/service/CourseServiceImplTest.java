@@ -1,6 +1,8 @@
 package com.lambdaschool.school.service;
 
 import com.lambdaschool.school.SchoolApplication;
+import com.lambdaschool.school.model.Course;
+import com.lambdaschool.school.repository.InstructorRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +23,9 @@ public class CourseServiceImplTest
     @Autowired
     private CourseService courseService;
 
+    @Autowired
+    InstructorRepository instructorRepository;
+
     @Before
     public void setUp() throws Exception
     {
@@ -30,6 +35,16 @@ public class CourseServiceImplTest
     @After
     public void tearDown() throws Exception
     {
+    }
+
+    @Test
+    public void addCourse()
+    {
+        Course newCourse = new Course();
+        newCourse.setCoursename("Spanish");
+        newCourse.setInstructor(instructorRepository.findById(1L).orElseThrow());
+        courseService.Add(newCourse);
+        assertEquals(7, courseService.findAll().size());
     }
 
     @Test
@@ -64,7 +79,8 @@ public class CourseServiceImplTest
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void findCourseByIdNo(){
+    public void findCourseByIdNo()
+    {
         assertEquals("Data Science", courseService.findCourseById(1000).getCoursename());
     }
 }
